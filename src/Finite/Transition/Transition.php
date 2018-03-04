@@ -99,8 +99,9 @@ class Transition implements PropertiesAwareTransitionInterface
     /**
      * {@inheritdoc}
      */
-    public function process(StateMachineInterface $stateMachine)
+    public function process(StateMachineInterface $stateMachine,array $params)
     {
+        return $stateMachine->getObject()->{$this->getName()}($params);
     }
 
     /**

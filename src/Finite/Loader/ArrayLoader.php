@@ -37,11 +37,6 @@ class ArrayLoader implements LoaderInterface
     private $callbackBuilderFactory;
 
     /**
-     * @var string
-     */
-    private $transition = Transition::class;
-
-    /**
      * @param array                           $config
      * @param CallbackHandler                 $handler
      * @param CallbackBuilderFactoryInterface $callbackBuilderFactory
@@ -97,17 +92,6 @@ class ArrayLoader implements LoaderInterface
     }
 
     /**
-     * @param TransitionInterface $transition
-     * @return $this
-     */
-    public function setTransition(TransitionInterface $transition)
-    {
-        $this->transition = get_class($transition);
-        return $this;
-    }
-
-
-    /**
      * @param StateMachineInterface $stateMachine
      */
     private function loadStates(StateMachineInterface $stateMachine)
@@ -153,9 +137,8 @@ class ArrayLoader implements LoaderInterface
 
         foreach ($this->config['transitions'] as $transition => $config) {
             $config = $resolver->resolve($config);
-            $transitionClass = $this->transition;
             $stateMachine->addTransition(
-                new $transitionClass(
+                new Transition(
                     $transition,
                     $config['from'],
                     $config['to'],
