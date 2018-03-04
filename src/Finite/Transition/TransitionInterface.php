@@ -32,7 +32,7 @@ interface TransitionInterface
      * @param array $params
      * @return mixed
      */
-    public function process(StateMachineInterface $stateMachine, array $params);
+    public function process(StateMachineInterface $stateMachine, array $params = []);
 
     /**
      * Returns the name of the transition.
