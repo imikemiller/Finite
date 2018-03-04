@@ -10,6 +10,7 @@ use Finite\StateMachine\StateMachineInterface;
 use Finite\State\State;
 use Finite\State\StateInterface;
 use Finite\Transition\Transition;
+use Finite\Transition\TransitionInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -34,6 +35,11 @@ class ArrayLoader implements LoaderInterface
      * @var CallbackBuilderFactoryInterface
      */
     private $callbackBuilderFactory;
+
+    /**
+     * @var string
+     */
+    private $transition = Transition::class;
 
     /**
      * @param array                           $config
@@ -91,6 +97,17 @@ class ArrayLoader implements LoaderInterface
     }
 
     /**
+     * @param TransitionInterface $transition
+     * @return $this
+     */
+    public function setTransition(TransitionInterface $transition)
+    {
+        $this->transition = get_class($transition);
+        return $this;
+    }
+
+
+    /**
      * @param StateMachineInterface $stateMachine
      */
     private function loadStates(StateMachineInterface $stateMachine)
@@ -136,8 +153,9 @@ class ArrayLoader implements LoaderInterface
 
         foreach ($this->config['transitions'] as $transition => $config) {
             $config = $resolver->resolve($config);
+            $transitionClass = $this->transition;
             $stateMachine->addTransition(
-                new Transition(
+                new $transitionClass(
                     $transition,
                     $config['from'],
                     $config['to'],
